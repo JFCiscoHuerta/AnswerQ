@@ -5,8 +5,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 public interface IUserAnswerService extends IService<UserAnswer, UserAnswer> {
-    Page<UserAnswer> findAllByForm(Form form, Pageable pageable);
-    Page<UserAnswer> findAllByUser(User user, Pageable pageable);
-    Page<UserAnswer> findAllByQuestion(Question question, Pageable pageable);
-    Page<Answer> findAllByAnswer(Answer answer, Pageable pageable);
+    Page<UserAnswer> findAllByForm(Long formId, Pageable pageable);
+    Page<UserAnswer> findAllByUser(Long userId, Pageable pageable);
+    Page<UserAnswer> findAllByQuestion(Long questionId, Pageable pageable);
+    Page<UserAnswer> findAllByAnswer(Long answerId, Pageable pageable);
 }

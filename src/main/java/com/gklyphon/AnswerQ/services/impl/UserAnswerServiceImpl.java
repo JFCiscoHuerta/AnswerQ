@@ -21,26 +21,26 @@ public class UserAnswerServiceImpl implements IUserAnswerService {
 
     @Override
     @Transactional(readOnly = true)
-    public Page<UserAnswer> findAllByForm(Form form, Pageable pageable) {
-        return userAnswerRepository.findAllByForm(form, pageable);
+    public Page<UserAnswer> findAllByForm(Long formId, Pageable pageable) {
+        return userAnswerRepository.findAllByForm_Id(formId, pageable);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public Page<UserAnswer> findAllByUser(User user, Pageable pageable) {
-        return userAnswerRepository.findAllByUser(user, pageable);
+    public Page<UserAnswer> findAllByUser(Long userId, Pageable pageable) {
+        return userAnswerRepository.findAllByUser_Id(userId, pageable);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public Page<UserAnswer> findAllByQuestion(Question question, Pageable pageable) {
-        return userAnswerRepository.findAllByQuestion(question, pageable);
+    public Page<UserAnswer> findAllByQuestion(Long questionId, Pageable pageable) {
+        return userAnswerRepository.findAllByQuestion_Id(questionId, pageable);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public Page<Answer> findAllByAnswer(Answer answer, Pageable pageable) {
-        return userAnswerRepository.findAllByAnswer(answer, pageable);
+    public Page<Answer> findAllByAnswer(Long answerId, Pageable pageable) {
+        return userAnswerRepository.findAllByAnswer_Id(answerId, pageable);
     }
 
     @Override

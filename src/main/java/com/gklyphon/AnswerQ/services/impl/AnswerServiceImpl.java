@@ -22,8 +22,8 @@ public class AnswerServiceImpl implements IAnswerService {
 
     @Override
     @Transactional(readOnly = true)
-    public Page<Answer> findAllByQuestion(Question question, Pageable pageable) {
-        return answerRepository.findAllByQuestion(question, pageable);
+    public Page<Answer> findAllByQuestion_Id(Long questionId, Pageable pageable) {
+        return answerRepository.findAllByQuestion_Id(questionId, pageable);
     }
 
     @Override

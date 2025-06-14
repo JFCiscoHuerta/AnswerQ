@@ -22,8 +22,8 @@ public class FormServiceImpl implements IFormService {
 
     @Override
     @Transactional(readOnly = true)
-    public Page<Form> findAllByUser(User user, Pageable pageable) {
-        return formRepository.findAllByUser(user, pageable);
+    public Page<Form> findAllByUser_Id(Long userId, Pageable pageable) {
+        return formRepository.findAllByUser_Id(userId, pageable);
     }
 
     @Override
