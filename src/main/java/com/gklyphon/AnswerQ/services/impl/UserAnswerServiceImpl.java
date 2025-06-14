@@ -39,7 +39,7 @@ public class UserAnswerServiceImpl implements IUserAnswerService {
 
     @Override
     @Transactional(readOnly = true)
-    public Page<Answer> findAllByAnswer(Long answerId, Pageable pageable) {
+    public Page<UserAnswer> findAllByAnswer(Long answerId, Pageable pageable) {
         return userAnswerRepository.findAllByAnswer_Id(answerId, pageable);
     }
 

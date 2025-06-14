@@ -9,5 +9,5 @@ public interface IUserAnswerRepository extends JpaRepository<UserAnswer, Long> {
     Page<UserAnswer> findAllByForm_Id(Long formId, Pageable pageable);
     Page<UserAnswer> findAllByUser_Id(Long userId, Pageable pageable);
     Page<UserAnswer> findAllByQuestion_Id(Long questionId, Pageable pageable);
-    Page<Answer> findAllByAnswer_Id(Long answerId, Pageable pageable);
+    Page<UserAnswer> findAllByAnswer_Id(Long answerId, Pageable pageable);
 }
