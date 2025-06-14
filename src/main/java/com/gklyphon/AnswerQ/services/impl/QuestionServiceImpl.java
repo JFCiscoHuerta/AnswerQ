@@ -1,6 +1,5 @@
 package com.gklyphon.AnswerQ.services.impl;
 
-import com.gklyphon.AnswerQ.models.Form;
 import com.gklyphon.AnswerQ.models.Question;
 import com.gklyphon.AnswerQ.repositories.IQuestionRepository;
 import com.gklyphon.AnswerQ.services.IQuestionService;
@@ -22,8 +21,8 @@ public class QuestionServiceImpl implements IQuestionService {
 
     @Override
     @Transactional(readOnly = true)
-    public Page<Question> findAllByForm(Form form, Pageable pageable) {
-        return questionRepository.findAllByForm(form, pageable);
+    public Page<Question> findAllByForm_Id(Long id, Pageable pageable) {
+        return questionRepository.findAllByForm_Id(id, pageable);
     }
 
     @Override

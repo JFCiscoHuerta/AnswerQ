@@ -6,8 +6,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface IUserAnswerRepository extends JpaRepository<UserAnswer, Long> {
-    Page<UserAnswer> findAllByForm(Form form, Pageable pageable);
-    Page<UserAnswer> findAllByUser(User user, Pageable pageable);
-    Page<UserAnswer> findAllByQuestion(Question question, Pageable pageable);
-    Page<Answer> findAllByAnswer(Answer answer, Pageable pageable);
+    Page<UserAnswer> findAllByForm_Id(Long formId, Pageable pageable);
+    Page<UserAnswer> findAllByUser_Id(Long userId, Pageable pageable);
+    Page<UserAnswer> findAllByQuestion_Id(Long questionId, Pageable pageable);
+    Page<UserAnswer> findAllByAnswer_Id(Long answerId, Pageable pageable);
 }
