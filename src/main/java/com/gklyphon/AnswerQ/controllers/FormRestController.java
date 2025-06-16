@@ -32,13 +32,13 @@ public class FormRestController {
         return ResponseEntity.ok(buildPageModels(formService.findAll(pageable)));
     }
 
-    @GetMapping("/user/${user_id}")
+    @GetMapping("/user/{id}")
     public ResponseEntity<?> getAllByUser(
-            @PathVariable(name = "user_id") Long userId,
+            @PathVariable Long id,
             @RequestParam(name = "page", defaultValue = "0") int page,
             @RequestParam(name = "size", defaultValue = "10") int size) {
         Pageable pageable = PageRequest.of(page, size);
-        return ResponseEntity.ok(buildPageModels(formService.findAllByUser_Id(userId, pageable)));
+        return ResponseEntity.ok(buildPageModels(formService.findAllByUser_Id(id, pageable)));
     }
 
     @PostMapping
