@@ -1,17 +1,11 @@
 package com.gklyphon.AnswerQ.models;
 
 import jakarta.persistence.*;
-import lombok.*;
 
 import java.util.Set;
 
-@Builder
-@Getter
-@Setter
 @Entity
 @Table
-@AllArgsConstructor
-@NoArgsConstructor
 public class Question {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
