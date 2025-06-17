@@ -3,6 +3,12 @@ package com.gklyphon.AnswerQ.models;
 
 import jakarta.persistence.*;
 
+/**
+ * This class represents an answer to a question.
+ *
+ * @author JFCiscoHuerta
+ * @since 2025-06-16
+ */
 @Entity
 @Table
 public class Answer {
@@ -13,6 +19,7 @@ public class Answer {
     private String content;
     private boolean isCorrect;
 
+    // The question this answer belongs to
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "question_id", nullable = false)
     private Question question;

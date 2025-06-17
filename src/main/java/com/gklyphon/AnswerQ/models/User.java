@@ -6,6 +6,13 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Set;
 
+/**
+ * This class represents a user.
+ * It stores basic personal data.
+ *
+ * @author JFCiscoHuerta
+ * @since 2025-06-16
+ */
 @Entity
 @Table(name = "users")
 public class User {
@@ -27,9 +34,11 @@ public class User {
     private LocalDateTime updatedAt;
     private LocalDateTime deletedAt;
 
+    // Forms created by the user
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Form> forms;
 
+    // Answers submitted by the user
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<UserAnswer> userAnswers;
 
