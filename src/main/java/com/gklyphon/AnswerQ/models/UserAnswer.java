@@ -4,6 +4,13 @@ import jakarta.persistence.*;
 
 import java.time.LocalDate;
 
+/**
+ * This class represents a user's answer to a question in a form.
+ * It connects a user, a form, a question, and an optional selected answer.
+ *
+ * @author JFCiscoHuerta
+ * @since 2025-06-16
+ */
 @Entity
 @Table
 public class UserAnswer {
@@ -12,18 +19,22 @@ public class UserAnswer {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    // The form that contains the question
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "form_id", nullable = false)
     private Form form;
 
+    // The specific question answered
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "question_id", nullable = false)
     private Question question;
 
+    // The selected answer (can be null if it's a text question)
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "answer_id")
     private Answer answer;
 
+    // The user who answered
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;

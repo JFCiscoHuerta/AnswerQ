@@ -4,6 +4,13 @@ import jakarta.persistence.*;
 
 import java.util.Set;
 
+/**
+ * This class represents a form created by a user.
+ * Each form belongs to a specific user.
+ *
+ * @author JFCiscoHuerta
+ * @since 2025-06-16
+ */
 @Entity
 @Table
 public class Form {
@@ -14,9 +21,11 @@ public class Form {
     private boolean isEnabled;
     private String pin;
 
+    // The user owner of the form
     @ManyToOne
     private User user;
 
+    // List of questions in the form
     @OneToMany(mappedBy = "form", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Question> questions;
 
