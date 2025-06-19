@@ -1,5 +1,6 @@
 package com.gklyphon.AnswerQ.services.impl;
 
+import com.gklyphon.AnswerQ.exceptions.exception.ElementNotFoundException;
 import com.gklyphon.AnswerQ.models.Form;
 import com.gklyphon.AnswerQ.repositories.IFormRepository;
 import com.gklyphon.AnswerQ.services.IFormService;
@@ -17,7 +18,7 @@ import java.util.NoSuchElementException;
  * Implements {@link IFormService} interface.
  *
  * @author JFCiscoHuerta
- * @date 2025-06-16
+ * @since 2025-06-16
  */
 @Service
 public class FormServiceImpl implements IFormService {
@@ -50,8 +51,8 @@ public class FormServiceImpl implements IFormService {
      */
     @Override
     @Transactional(readOnly = true)
-    public Form findById(Long id) {
-        return formRepository.findById(id).orElseThrow();
+    public Form findById(Long id) throws ElementNotFoundException {
+        return formRepository.findById(id).orElseThrow(() -> new ElementNotFoundException("Form not found."));
     }
 
     /**
