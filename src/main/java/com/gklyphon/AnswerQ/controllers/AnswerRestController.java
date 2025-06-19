@@ -1,5 +1,6 @@
 package com.gklyphon.AnswerQ.controllers;
 
+import com.gklyphon.AnswerQ.exceptions.exception.ElementNotFoundException;
 import com.gklyphon.AnswerQ.models.Answer;
 import com.gklyphon.AnswerQ.services.IAnswerService;
 import org.springframework.data.domain.Page;
@@ -69,7 +70,7 @@ public class AnswerRestController {
      * @return The found answer.
      */
     @GetMapping("/{id}")
-    public ResponseEntity<?> getById(@PathVariable Long id) {
+    public ResponseEntity<?> getById(@PathVariable Long id) throws ElementNotFoundException {
         return ResponseEntity.ok(answerService.findById(id));
     }
 

@@ -1,5 +1,6 @@
 package com.gklyphon.AnswerQ.services.impl;
 
+import com.gklyphon.AnswerQ.exceptions.exception.ElementNotFoundException;
 import com.gklyphon.AnswerQ.models.Answer;
 import com.gklyphon.AnswerQ.repositories.IAnswerRepository;
 import com.gklyphon.AnswerQ.services.IAnswerService;
@@ -17,7 +18,7 @@ import java.util.NoSuchElementException;
  * Implements {@link IAnswerService} interface.
  *
  * @author JFCiscoHuerta
- * @date 2025-06-16
+ * @since 2025-06-16
  */
 @Service
 public class AnswerServiceImpl implements IAnswerService {
@@ -50,8 +51,9 @@ public class AnswerServiceImpl implements IAnswerService {
      */
     @Override
     @Transactional(readOnly = true)
-    public Answer findById(Long id) {
-        return answerRepository.findById(id).orElseThrow();
+    public Answer findById(Long id) throws ElementNotFoundException {
+        return answerRepository.findById(id).orElseThrow(
+                () -> new ElementNotFoundException("Answer not found."));
     }
 
     /**

@@ -63,12 +63,11 @@ public class FormRestController {
     }
 
     /**
-     * Retrieves all forms associated with a specific user.
+     * Creates a new form.
      *
-     * @param id User ID.
-     * @param page Page number (default is 0).
-     * @param size Number of elements per page (default is 10).
-     * @return Paginated list of forms associated with the given user.
+     * @param form The updated form data.
+     * @return The created form.
+     * @throws Exception if update fails.
      */
     @PostMapping
     public ResponseEntity<?> createForm(@RequestBody Form form) throws Exception {
@@ -89,12 +88,9 @@ public class FormRestController {
     }
 
     /**
-     * Updates an existing form.
+     * deletes an existing form.
      *
      * @param id ID of the form to update.
-     * @param form The updated form data.
-     * @return The updated form.
-     * @throws Exception if update fails.
      */
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteForm(@PathVariable Long id) throws Exception {

@@ -1,5 +1,6 @@
 package com.gklyphon.AnswerQ.services.impl;
 
+import com.gklyphon.AnswerQ.exceptions.exception.ElementNotFoundException;
 import com.gklyphon.AnswerQ.models.*;
 import com.gklyphon.AnswerQ.repositories.IUserAnswerRepository;
 import com.gklyphon.AnswerQ.services.IUserAnswerService;
@@ -10,12 +11,14 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.NoSuchElementException;
+
 /**
  * Service implementation for managing {@link UserAnswer} entities.
  * Implements {@link IUserAnswerService} interface.
  *
- * @author: JFCiscoHuerta
- * @date: 2025-06-16
+ * @author JFCiscoHuerta
+ * @since  2025-06-16
  */
 @Service
 public class UserAnswerServiceImpl implements IUserAnswerService {
@@ -87,8 +90,9 @@ public class UserAnswerServiceImpl implements IUserAnswerService {
      */
     @Override
     @Transactional(readOnly = true)
-    public UserAnswer findById(Long id) {
-        return userAnswerRepository.findById(id).orElseThrow();
+    public UserAnswer findById(Long id) throws ElementNotFoundException {
+        return userAnswerRepository.findById(id).orElseThrow(
+                () -> new ElementNotFoundException("User Answer not found."));
     }
 
     /**

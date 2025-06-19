@@ -1,5 +1,6 @@
 package com.gklyphon.AnswerQ.services;
 
+import com.gklyphon.AnswerQ.exceptions.exception.ElementNotFoundException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -22,7 +23,7 @@ public interface IService <T, N> {
      * @param id The ID of the entity.
      * @return The found entity.
      */
-    T findById(Long id);
+    T findById(Long id) throws ElementNotFoundException;
 
     /**
      * Gets a paginated list of all entities.
