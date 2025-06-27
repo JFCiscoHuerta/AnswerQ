@@ -29,6 +29,7 @@ public class User {
     private String gender;
     private String phoneNumber;
     private String password;
+    private Boolean enabled;
 
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
@@ -45,7 +46,7 @@ public class User {
     public User() {
     }
 
-    public User(Long id, String username, String firstname, String lastname, LocalDate birthdate, String email, String gender, String phoneNumber, String password, LocalDateTime createdAt, LocalDateTime updatedAt, LocalDateTime deletedAt, Set<Form> forms, Set<UserAnswer> userAnswers) {
+    public User(Long id, String username, String firstname, String lastname, LocalDate birthdate, String email, String gender, String phoneNumber, String password, Boolean enabled, LocalDateTime createdAt, LocalDateTime updatedAt, LocalDateTime deletedAt, Set<Form> forms, Set<UserAnswer> userAnswers) {
         this.id = id;
         this.username = username;
         this.firstname = firstname;
@@ -55,6 +56,7 @@ public class User {
         this.gender = gender;
         this.phoneNumber = phoneNumber;
         this.password = password;
+        this.enabled = enabled;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
         this.deletedAt = deletedAt;
@@ -172,5 +174,13 @@ public class User {
 
     public void setUserAnswers(Set<UserAnswer> userAnswers) {
         this.userAnswers = userAnswers;
+    }
+
+    public Boolean getEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(Boolean enabled) {
+        this.enabled = enabled;
     }
 }
