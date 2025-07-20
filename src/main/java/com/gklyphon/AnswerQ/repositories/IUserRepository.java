@@ -21,4 +21,20 @@ public interface IUserRepository extends JpaRepository<User, Long> {
      * @return An Optional containing the found user, or empty if none found.
      */
     Optional<User> findByUsername(String username);
+
+    /**
+     * Finds a user by their email.
+     *
+     * @param email The email to search for.
+     * @return An Optional containing the found user, or empty if none found.
+     */
+    Optional<User> findByEmail(String email);
+
+    /**
+     * Finds a user by their verification code.
+     *
+     * @param verificationCode The email to search for.
+     * @return An Optional containing the found user, or empty if none found.
+     */
+    Optional<User> findByVerificationCode(String verificationCode);
 }
