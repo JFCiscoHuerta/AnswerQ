@@ -13,7 +13,7 @@ import java.util.Set;
  */
 @Entity
 @Table
-public class Form {
+public class Form extends Auditable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
