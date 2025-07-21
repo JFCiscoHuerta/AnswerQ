@@ -11,6 +11,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+/**
+ * REST controller for handling authentication related operations.
+ *
+ * @author JFCiscoHuerta
+ * @since 2025-07-19
+ */
 @RestController
 @RequestMapping("/auth")
 public class AuthRestController {
@@ -23,12 +29,24 @@ public class AuthRestController {
         this.authenticationService = authenticationService;
     }
 
+    /**
+     * Registers a new user account.
+     *
+     * @param registerUserDto DTO containing user registration details
+     * @return ResponseEntity containing the registered user and HTTP status
+     */
     @PostMapping("/signup")
     public ResponseEntity<User> register(@RequestBody RegisterUserDto registerUserDto) {
         User registeredUser = authenticationService.signup(registerUserDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(registeredUser);
     }
 
+    /**
+     * Authenticates a user and generates a JWT token.
+     *
+     * @param loginUserDto DTO containing user login credentials
+     * @return ResponseEntity containing the JWT token and its expiration time
+     */
     @PostMapping("/login")
     public ResponseEntity<LoginResponse> login(@RequestBody LoginUserDto loginUserDto) {
         User authenticatedUser = authenticationService.authenticate(loginUserDto);
@@ -37,6 +55,12 @@ public class AuthRestController {
         return ResponseEntity.ok(loginResponse);
     }
 
+    /**
+     * Verifies a user's account using the verification code.
+     *
+     * @param verifyUserDto DTO containing verification details
+     * @return ResponseEntity with success message or error details
+     */
     @PostMapping("/verify")
     public ResponseEntity<?> verifyUser(@RequestBody VerifyUserDto verifyUserDto) {
         try {
@@ -47,6 +71,12 @@ public class AuthRestController {
         }
     }
 
+    /**
+     * Resends the verification code to the user's email.
+     *
+     * @param email The email address to resend the code to
+     * @return ResponseEntity with success message or error details
+     */
     @PostMapping("/resend")
     public ResponseEntity<?> resendVerificationCode(@RequestParam String email) {
         try {
