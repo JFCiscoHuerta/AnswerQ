@@ -1,5 +1,11 @@
 package com.gklyphon.AnswerQ.dtos;
 
+/**
+ * DTO for user login requests.
+ *
+ * @author JFCiscoHuerta
+ * @since 2025-07-19
+ */
 public class LoginUserDto {
     private String email;
     private String password;

@@ -17,6 +17,12 @@ import java.security.SecureRandom;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Application configuration class that defines core security beans.
+ *
+ * @author JFCiscoHuerta
+ * @since 2025-07-19
+ */
 @Configuration
 public class AppConfig {
 
@@ -26,6 +32,11 @@ public class AppConfig {
         this.userRepository = userRepository;
     }
 
+    /**
+     * Configures a delegating password encoder with multiple hashing algorithms.
+     *
+     * @return DelegatingPasswordEncoder With multiple encoding options
+     */
     @Bean
     static PasswordEncoder passwordEncoder() {
         String idForEncode = "bcrypt";
@@ -40,18 +51,27 @@ public class AppConfig {
         return new DelegatingPasswordEncoder(idForEncode, encoders);
     }
 
+    /**
+     * Custom user details service that loads users by email from the repository.
+     *
+     * @return UserDetailsService implementation
+     */
     @Bean
     UserDetailsService userDetailsService() {
         return username -> userRepository.findByEmail(username)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
     }
 
+    /**
+     * Configures the authentication provider with custom user details and password encoder.
+     *
+     * @return Configured DaoAuthenticationProvider
+     */
     @Bean
     AuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
         authenticationProvider.setUserDetailsService(userDetailsService());
         authenticationProvider.setPasswordEncoder(passwordEncoder());
-
         return authenticationProvider;
     }
 

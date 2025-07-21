@@ -18,6 +18,12 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.util.List;
 
+/**
+ * Security configuration class that defines the security policies.
+ *
+ * @author JFCiscoHuerta
+ * @since 2025-07-19
+ */
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
@@ -30,22 +36,35 @@ public class SecurityConfig {
         this.jwtAuthenticationFilter = jwtAuthenticationFilter;
     }
 
-    private final String[] PUBLIC_ENDPOINTS = {"/register"};
+    private final String[] PUBLIC_ENDPOINTS = {"/auth/**"};
     private final String[] AUTHENTICATED_ENDPOINTS = {"/v1/answers/**","/v1/forms/**", "/v1/question/**"
         , "/v1/user-answers/**"};
 
+    /**
+     * Creates and configures the authentication manager.
+     *
+     * @param configuration The authentication configuration
+     * @return Configured AuthenticationManager
+     * @throws Exception If configuration fails
+     */
     @Bean
     AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
         return configuration.getAuthenticationManager();
     }
 
+    /**
+     * Configures the security filter chain.
+     *
+     * @param httpSecurity The HTTP Security builder
+     * @return Configured SecurityFilterChain
+     * @throws Exception If configuration fails
+     */
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         return httpSecurity.authorizeHttpRequests(
                 (auths) -> auths
                         .requestMatchers(AUTHENTICATED_ENDPOINTS).authenticated()
                         .requestMatchers(PUBLIC_ENDPOINTS).permitAll()
-                        .requestMatchers("/auth/**").permitAll()
                         .anyRequest().authenticated()
         ).sessionManagement(manager -> manager.sessionCreationPolicy(
                 SessionCreationPolicy.STATELESS)
@@ -57,6 +76,11 @@ public class SecurityConfig {
         .build();
     }
 
+    /**
+     * Configures CORS settings.
+     *
+     * @return Configured CorsConfigurationSource
+     */
     @Bean
     CorsConfigurationSource corsConfiguration() {
 
