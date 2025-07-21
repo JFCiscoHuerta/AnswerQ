@@ -11,7 +11,7 @@ import jakarta.persistence.*;
  */
 @Entity
 @Table
-public class Answer {
+public class Answer extends Auditable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

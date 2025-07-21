@@ -1,0 +1,43 @@
+services:
+
+  answerq-db:
+    container_name: answerq-db
+    image: postgres:16-alpine
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "${ANSWERQ_DB_USERNAME}"]
+      interval: 10s
+      retries: 5
+    environment:
+      POSTGRES_DB: ${ANSWERQ_DB}
+      POSTGRES_USER: ${ANSWERQ_DB_USERNAME}
+      POSTGRES_PASSWORD: ${ANSWERQ_DB_PASSWORD}
+    volumes:
+      - data-answerq:/var/lib/postgresql/data
+    restart: always
+    networks:
+      - answerq
+
+  answerq-app:
+    container_name: answerq-app
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    ports:
+      - "8081:8081"
+    env_file: .env
+    depends_on:
+      - answerq-db
+    restart: always
+    networks:
+      - answerq
+
+volumes:
+  data-answerq:
+    name: data-answerq
+
+networks:
+  answerq:
+    name: answerq
+    driver: bridge
