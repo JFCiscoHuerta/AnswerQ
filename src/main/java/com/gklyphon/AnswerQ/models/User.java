@@ -35,7 +35,6 @@ public class User extends Auditable implements UserDetails {
     private String password;
     private Boolean enabled;
 
-
     // Forms created by the user
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Form> forms;
