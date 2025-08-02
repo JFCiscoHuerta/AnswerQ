@@ -56,19 +56,19 @@ public class AuthenticationService {
      */
     @Transactional
     public ResponseUserDto signup(RegisterUserDto registerUserDto) {
-        // Use mapper
-        User user = new User();
-        user.setUsername(registerUserDto.getUsername());
+        User user = mapper.fromUserRegisterUserDtoToUser(registerUserDto);
         user.setPassword(passwordEncoder.encode(registerUserDto.getPassword()));
-        user.setEmail(registerUserDto.getEmail());
+        user.setEnabled(false);
         user.setVerificationCode(generateVerificationCode());
         user.setVerificationCodeExpiresAt(LocalDateTime.now().plusMinutes(VERIFICATION_CODE_EXPIRATION_MINUTES));
-        user.setEnabled(false);
 
-        //El usuario se creara antes de enviar el correo, de otro se enviara el correo y el usuario no se creara
-        sendVerificationEmail(user);
+        ResponseUserDto responseUserDto = mapper.fromUserToUserDto(userRepository.save(user));
 
-        return mapper.fromUserToUserDto(userRepository.save(user));
+        if (responseUserDto.getId() > 0) {
+            sendVerificationEmail(user);
+        }
+
+        return responseUserDto;
     }
 
     /**
