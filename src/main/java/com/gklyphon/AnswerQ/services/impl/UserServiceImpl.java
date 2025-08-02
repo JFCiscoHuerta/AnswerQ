@@ -1,6 +1,8 @@
 package com.gklyphon.AnswerQ.services.impl;
 
+import com.gklyphon.AnswerQ.dtos.ResponseUserDto;
 import com.gklyphon.AnswerQ.exceptions.exception.ElementNotFoundException;
+import com.gklyphon.AnswerQ.mapper.IMapper;
 import com.gklyphon.AnswerQ.models.User;
 import com.gklyphon.AnswerQ.repositories.IUserRepository;
 import com.gklyphon.AnswerQ.services.IUserService;
@@ -17,31 +19,35 @@ public class UserServiceImpl implements IUserService {
 
     private final IUserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final IMapper mapper;
 
-    public UserServiceImpl(IUserRepository userRepository, PasswordEncoder passwordEncoder) {
+    public UserServiceImpl(IUserRepository userRepository, PasswordEncoder passwordEncoder, IMapper mapper) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
+        this.mapper = mapper;
     }
 
     @Override
     @Transactional(readOnly = true)
-    public User findById(Long id) throws ElementNotFoundException {
-        return userRepository.findById(id).orElseThrow(
-                () -> new ElementNotFoundException("User not found"));
+    public ResponseUserDto findById(Long id) throws ElementNotFoundException {
+        return mapper.fromUserToUserDto(userRepository.findById(id).orElseThrow(
+                () -> new ElementNotFoundException("User not found")));
     }
 
     @Override
     @Transactional(readOnly = true)
-    public Page<User> findAll(Pageable pageable) {
-        return userRepository.findAll(pageable);
+    public Page<ResponseUserDto> findAll(Pageable pageable) {
+        return userRepository.findAll(pageable)
+                .map(mapper::fromUserToUserDto);
     }
 
+    @Deprecated
     @Override
     @Transactional
-    public User save(User user) throws Exception {
+    public ResponseUserDto save(User user) throws Exception {
         try {
             user.setPassword(passwordEncoder.encode(user.getPassword()));
-            return userRepository.save(user);
+            return mapper.fromUserToUserDto(userRepository.save(user));
         } catch (ServiceException ex) {
             throw new ServiceException("Unexpected service error while saving user.", ex);
         } catch (Exception ex) {
@@ -49,14 +55,16 @@ public class UserServiceImpl implements IUserService {
         }
     }
 
+    @Deprecated
     @Override
     @Transactional
-    public User update(Long id, User user) throws Exception {
-        User originalUser = findById(id);
+    public ResponseUserDto update(Long id, User user) throws Exception {
+        User originalUser = userRepository.findById(id)
+                .orElseThrow(() -> new ElementNotFoundException("User not found"));
         try {
 
-            BeanUtils.copyProperties(user, originalUser, "id");
-            return userRepository.save(originalUser);
+            BeanUtils.copyProperties(user, originalUser, "id", "password");
+            return mapper.fromUserToUserDto(userRepository.save(originalUser));
         } catch (ServiceException ex) {
             throw new ServiceException("Unexpected service error while updating user.", ex);
         } catch (Exception ex) {
