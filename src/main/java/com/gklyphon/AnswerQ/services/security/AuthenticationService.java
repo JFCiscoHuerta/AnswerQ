@@ -1,19 +1,19 @@
 package com.gklyphon.AnswerQ.services.security;
 
-import com.gklyphon.AnswerQ.dtos.LoginUserDto;
-import com.gklyphon.AnswerQ.dtos.RegisterUserDto;
-import com.gklyphon.AnswerQ.dtos.VerifyUserDto;
+import com.gklyphon.AnswerQ.dtos.*;
+import com.gklyphon.AnswerQ.exceptions.exception.ElementNotFoundException;
+import com.gklyphon.AnswerQ.mapper.IMapper;
 import com.gklyphon.AnswerQ.models.User;
 import com.gklyphon.AnswerQ.repositories.IUserRepository;
 import com.gklyphon.AnswerQ.services.email.EmailService;
 import jakarta.mail.MessagingException;
-import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
@@ -26,7 +26,6 @@ import java.util.Random;
  * @since 2025-07-19
  */
 @Service
-@Slf4j
 public class AuthenticationService {
 
     private static final int VERIFICATION_CODE_LENGTH = 6;
@@ -37,12 +36,14 @@ public class AuthenticationService {
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
     private final EmailService emailService;
+    private final IMapper mapper;
 
-    public AuthenticationService(IUserRepository userRepository, PasswordEncoder passwordEncoder, AuthenticationManager authenticationManager, EmailService emailService) {
+    public AuthenticationService(IUserRepository userRepository, PasswordEncoder passwordEncoder, AuthenticationManager authenticationManager, EmailService emailService, IMapper mapper) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.authenticationManager = authenticationManager;
         this.emailService = emailService;
+        this.mapper = mapper;
     }
 
     /**
@@ -52,7 +53,8 @@ public class AuthenticationService {
      * @return The newly created user
      * @throws RuntimeException if there's an issue sending the verification email
      */
-    public User signup(RegisterUserDto registerUserDto) {
+    @Transactional
+    public ResponseUserDto signup(RegisterUserDto registerUserDto) {
         // Use mapper
         User user = new User();
         user.setUsername(registerUserDto.getUsername());
@@ -62,8 +64,10 @@ public class AuthenticationService {
         user.setVerificationCodeExpiresAt(LocalDateTime.now().plusMinutes(VERIFICATION_CODE_EXPIRATION_MINUTES));
         user.setEnabled(false);
 
+        //El usuario se creara antes de enviar el correo, de otro se enviara el correo y el usuario no se creara
         sendVerificationEmail(user);
-        return userRepository.save(user);
+
+        return mapper.fromUserToUserDto(userRepository.save(user));
     }
 
     /**
@@ -73,6 +77,7 @@ public class AuthenticationService {
      * @return The authenticated user
      * @throws RuntimeException if user is not found or account is not verified
      */
+    @Transactional
     public User authenticate(LoginUserDto loginUserDto) {
         User user = userRepository.findByEmail(loginUserDto.getEmail())
                 .orElseThrow(() -> new RuntimeException("User not found"));
@@ -82,7 +87,7 @@ public class AuthenticationService {
 
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(loginUserDto.getEmail(), loginUserDto.getPassword()));
-        return  user;
+        return user;
     }
 
     /**
@@ -142,22 +147,20 @@ public class AuthenticationService {
     public void sendVerificationEmail(User user) {
         String subject = "Account Verification";
         String verificationCode = user.getVerificationCode();
-        String htmlMessage = String.format("""
-            <html>
-                <body style="font-family: Arial, sans-serif;">
-                    <div style="background-color: #f5f5f5; padding: 20px;">
-                        <h2 style="color: #333;">Welcome to our app!</h2>
-                        <p style="font-size: 16px;">Please enter the verification code below to continue:</p>
-                        <div style="background-color: #333; padding: 20px; border-radius: 5px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);">
-                            <h3 style="color: #333;">Verification Code:</h3>
-                            <p style="font-size: 18px; font-weight: bold; color: #007bff;">%s</p>
-                        </div>
-                    </div>
-                </body>
-            </html>
-            """, verificationCode);
+        String htmlMessage = "<html>" +
+                "<body style=\"font-family: Arial, sans-serif;\">" +
+                "<div style=\"background-color: #f5f5f5; padding: 20px;\">" +
+                "<h2 style=\"color: #333;\">Welcome to AnswerQ!</h2>" +
+                "<p style=\"font-size: 16px;\">Please enter the verification code below to continue:</p>" +
+                "<div style=\"background-color: #333; padding: 20px; border-radius: 5px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);\">" +
+                "<h3 style=\"color: #333;\">Verification Code:</h3>" +
+                "<p style=\"font-size: 18px; font-weight: bold; color: #007bff;\">" + verificationCode + "</p>" +
+                "</div>" +
+                "</div>" +
+                "</body>" +
+                "</html>";
         try {
-            emailService.sendVerificationEmail(user.getEmail(), subject, htmlMessage);
+            emailService.sendEmail(user.getEmail(), subject, htmlMessage);
         } catch (MessagingException ex) {
             log.error(ex.getMessage());
         }
