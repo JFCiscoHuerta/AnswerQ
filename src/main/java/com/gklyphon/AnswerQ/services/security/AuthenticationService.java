@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Optional;
 import java.util.Random;
 
@@ -81,12 +82,14 @@ public class AuthenticationService {
     public User authenticate(LoginUserDto loginUserDto) {
         User user = userRepository.findByEmail(loginUserDto.getEmail())
                 .orElseThrow(() -> new RuntimeException("User not found"));
+
         if (!user.isEnabled()) {
             throw new RuntimeException("Account not verified. Please verify your account");
         }
 
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(loginUserDto.getEmail(), loginUserDto.getPassword()));
+        sendSignInAlertEmail(user);
         return user;
     }
 
@@ -176,6 +179,43 @@ public class AuthenticationService {
         int code = random.nextInt((int) Math.pow(10, VERIFICATION_CODE_LENGTH) - 1) +
                 (int) Math.pow(10, VERIFICATION_CODE_LENGTH - 1);
         return String.valueOf(code);
+    }
+
+    private void sendSignInAlertEmail(User user) {
+        String subject = "New Login Detected on Your Account";
+        String htmlMessage = "<html>" +
+                "<body style=\"font-family: Arial, sans-serif; line-height: 1.6; color: #333;\">" +
+                "<div style=\"max-width: 600px; margin: 0 auto; background-color: #f8f9fa; padding: 25px; border-radius: 8px;\">" +
+
+                "<div style=\"text-align: center; margin-bottom: 20px;\">" +
+                "<h2 style=\"color: #d32f2f; margin-bottom: 5px;\">Security Alert</h2>" +
+                "<div style=\"height: 2px; background: linear-gradient(to right, #f8f9fa, #d32f2f, #f8f9fa); margin: 10px 0;\"></div>" +
+                "</div>" +
+
+                "<p>Hello <strong>" + user.getFirstname() + "</strong>,</p>" +
+                "<p>We detected a new sign-in to your account:</p>" +
+
+                "<div style=\"background-color: #fff; padding: 15px; border-left: 4px solid #d32f2f; margin: 20px 0; box-shadow: 0 2px 4px rgba(0,0,0,0.05);\">" +
+                "<p style=\"margin: 8px 0;\"><strong>Time:</strong> " + LocalDateTime.now().format(DateTimeFormatter.ofPattern("MMMM dd, yyyy hh:mm a")) + "</p>" +
+                "</div>" +
+
+                "<p>If this wasn't you:</p>" +
+                "<ul style=\"padding-left: 20px; margin: 15px 0;\">" +
+                "<li>Change your password immediately</li>" +
+                "</ul>" +
+
+                "<!-- Footer -->" +
+                "<div style=\"font-size: 13px; color: #777; border-top: 1px solid #eee; padding-top: 15px; margin-top: 20px;\">" +
+                "<p>Ignore this email if you recognize this activity. For security reasons, we recommend never sharing your credentials.</p>" +
+                "</div>" +
+                "</div>" +
+                "</body>" +
+                "</html>";
+        try {
+            emailService.sendEmail(user.getEmail(), subject, htmlMessage);
+        } catch (MessagingException ex) {
+            log.error(ex.getMessage());
+        }
     }
 
 }
