@@ -39,7 +39,7 @@ public class ProfileService {
     public void updatePassword(Long id, PasswordUpdateDto passwordUpdateDto) throws ElementNotFoundException {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new ElementNotFoundException("User not found"));
-        if (!passwordEncoder.matches(passwordUpdateDto.getOldPassword(), passwordUpdateDto.getNewPassword())) {
+        if (!passwordEncoder.matches(passwordUpdateDto.getOldPassword(), user.getPassword())) {
             throw new IllegalArgumentException("Old password is incorrect");
         }
         if (passwordEncoder.matches(passwordUpdateDto.getNewPassword(), user.getPassword())) {
