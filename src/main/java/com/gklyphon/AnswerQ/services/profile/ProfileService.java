@@ -47,6 +47,7 @@ public class ProfileService {
         }
         user.setPassword(passwordEncoder.encode(passwordUpdateDto.getNewPassword()));
         userRepository.save(user);
+        sendUpdatePasswordNotification(user);
     }
 
     @Transactional
