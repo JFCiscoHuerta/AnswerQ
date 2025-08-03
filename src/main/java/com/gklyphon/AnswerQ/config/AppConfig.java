@@ -48,7 +48,10 @@ public class AppConfig {
         encoders.put("argon2", new Argon2PasswordEncoder(16, 32, 4, 65536, 4));
         encoders.put("argon2@SpringSecurity_v5_8", Argon2PasswordEncoder.defaultsForSpringSecurity_v5_8());
 
-        return new DelegatingPasswordEncoder(idForEncode, encoders);
+        DelegatingPasswordEncoder delegatingPasswordEncoder = new DelegatingPasswordEncoder(idForEncode, encoders);
+        delegatingPasswordEncoder.setDefaultPasswordEncoderForMatches(encoders.get(idForEncode));
+
+        return delegatingPasswordEncoder;
     }
 
     /**
