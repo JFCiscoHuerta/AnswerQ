@@ -99,6 +99,7 @@ public class AuthenticationService {
      * @param verifyUserDto DTO containing verification details
      * @throws RuntimeException if verification code is invalid, expired, or user not found
      */
+    @Transactional
     public void verifyUser(VerifyUserDto verifyUserDto) {
         Optional<User> optionalUser = userRepository.findByEmail(verifyUserDto.getEmail());
 
@@ -129,6 +130,7 @@ public class AuthenticationService {
      * @param email The email address of the user
      * @throws RuntimeException if user is not found or account is already verified
      */
+    @Transactional
     public void resendVerificationCode(String email) {
         Optional<User> optionalUser = userRepository.findByEmail(email);
 
