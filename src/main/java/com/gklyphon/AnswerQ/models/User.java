@@ -1,5 +1,6 @@
 package com.gklyphon.AnswerQ.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -38,10 +39,12 @@ public class User extends Auditable implements UserDetails {
 
     // Forms created by the user
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
     private Set<Form> forms;
 
     // Answers submitted by the user
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
     private Set<UserAnswer> userAnswers;
 
     @Column(name = "verification_code")
