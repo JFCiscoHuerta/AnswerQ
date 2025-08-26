@@ -1,5 +1,6 @@
 package com.gklyphon.AnswerQ.services;
 
+import com.gklyphon.AnswerQ.dtos.ResponseFormDto;
 import com.gklyphon.AnswerQ.models.Form;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -11,7 +12,7 @@ import org.springframework.data.domain.Pageable;
  * @author JFCiscoHuerta
  * @since 2025-06-16
  */
-public interface IFormService extends IService<Form, Form> {
+public interface IFormService extends IService<ResponseFormDto, Form> {
 
     /**
      * Finds a page of forms belonging to a specific user.
@@ -20,5 +21,5 @@ public interface IFormService extends IService<Form, Form> {
      * @param pageable Pagination information.
      * @return A page of forms owned by the user.
      */
-    Page<Form> findAllByUser_Id(Long userId, Pageable pageable);
+    Page<ResponseFormDto> findAllByUser_Id(Long userId, Pageable pageable);
 }

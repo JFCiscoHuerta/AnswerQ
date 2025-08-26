@@ -1,5 +1,6 @@
 package com.gklyphon.AnswerQ.controllers;
 
+import com.gklyphon.AnswerQ.dtos.ResponseFormDto;
 import com.gklyphon.AnswerQ.models.Form;
 import com.gklyphon.AnswerQ.services.IFormService;
 import org.springframework.data.domain.Page;
@@ -23,9 +24,9 @@ import org.springframework.web.bind.annotation.*;
 public class FormRestController {
 
     private final IFormService formService;
-    private final PagedResourcesAssembler<Form> pagedResourcesAssembler;
+    private final PagedResourcesAssembler<ResponseFormDto> pagedResourcesAssembler;
 
-    public FormRestController(IFormService formService, PagedResourcesAssembler<Form> pagedResourcesAssembler) {
+    public FormRestController(IFormService formService, PagedResourcesAssembler<ResponseFormDto> pagedResourcesAssembler) {
         this.formService = formService;
         this.pagedResourcesAssembler = pagedResourcesAssembler;
     }
@@ -104,7 +105,7 @@ public class FormRestController {
      * @param page Page of answers.
      * @return HATEOAS paged model.
      */
-    private PagedModel<EntityModel<Form>> buildPageModels(Page<Form> page) {
+    private PagedModel<EntityModel<ResponseFormDto>> buildPageModels(Page<ResponseFormDto> page) {
         return pagedResourcesAssembler.toModel(page);
     }
 
