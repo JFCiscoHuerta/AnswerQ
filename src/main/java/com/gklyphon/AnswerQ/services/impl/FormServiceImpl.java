@@ -1,6 +1,8 @@
 package com.gklyphon.AnswerQ.services.impl;
 
+import com.gklyphon.AnswerQ.dtos.ResponseFormDto;
 import com.gklyphon.AnswerQ.exceptions.exception.ElementNotFoundException;
+import com.gklyphon.AnswerQ.mapper.IMapper;
 import com.gklyphon.AnswerQ.models.Form;
 import com.gklyphon.AnswerQ.repositories.IFormRepository;
 import com.gklyphon.AnswerQ.services.IFormService;
@@ -24,9 +26,11 @@ import java.util.NoSuchElementException;
 public class FormServiceImpl implements IFormService {
 
     private final IFormRepository formRepository;
+    private final IMapper mapper;
 
-    public FormServiceImpl(IFormRepository formRepository) {
+    public FormServiceImpl(IFormRepository formRepository, IMapper mapper) {
         this.formRepository = formRepository;
+        this.mapper = mapper;
     }
 
     /**
@@ -38,8 +42,9 @@ public class FormServiceImpl implements IFormService {
      */
     @Override
     @Transactional(readOnly = true)
-    public Page<Form> findAllByUser_Id(Long userId, Pageable pageable) {
-        return formRepository.findAllByUser_Id(userId, pageable);
+    public Page<ResponseFormDto> findAllByUser_Id(Long userId, Pageable pageable) {
+        Page<Form> forms = formRepository.findAllByUser_Id(userId, pageable);
+        return forms.map(mapper::fromFormToResponseFormDto);
     }
 
     /**
@@ -51,8 +56,9 @@ public class FormServiceImpl implements IFormService {
      */
     @Override
     @Transactional(readOnly = true)
-    public Form findById(Long id) throws ElementNotFoundException {
-        return formRepository.findById(id).orElseThrow(() -> new ElementNotFoundException("Form not found."));
+    public ResponseFormDto findById(Long id) throws ElementNotFoundException {
+        return mapper.fromFormToResponseFormDto(
+                formRepository.findById(id).orElseThrow(() -> new ElementNotFoundException("Form not found.")));
     }
 
     /**
@@ -63,8 +69,9 @@ public class FormServiceImpl implements IFormService {
      */
     @Override
     @Transactional(readOnly = true)
-    public Page<Form> findAll(Pageable pageable) {
-        return formRepository.findAll(pageable);
+    public Page<ResponseFormDto> findAll(Pageable pageable) {
+        Page<Form> forms = formRepository.findAll(pageable);
+        return forms.map(mapper::fromFormToResponseFormDto);
     }
 
     /**
@@ -76,9 +83,9 @@ public class FormServiceImpl implements IFormService {
      */
     @Override
     @Transactional
-    public Form save(Form form) throws Exception {
+    public ResponseFormDto save(Form form) throws Exception {
         try {
-            return formRepository.save(form);
+            return mapper.fromFormToResponseFormDto(formRepository.save(form));
         } catch (ServiceException ex) {
             throw new ServiceException("Unexpected Service Error While Saving", ex);
         } catch (Exception ex) {
@@ -96,11 +103,11 @@ public class FormServiceImpl implements IFormService {
      */
     @Override
     @Transactional
-    public Form update(Long id, Form form) throws Exception {
-        Form originalForm = findById(id);
+    public ResponseFormDto update(Long id, Form form) throws Exception {
+        Form originalForm = mapper.fromResponseFormDtoToForm(findById(id));
         try {
             BeanUtils.copyProperties(form, originalForm, "id");
-            return formRepository.save(originalForm);
+            return mapper.fromFormToResponseFormDto(formRepository.save(originalForm));
         } catch (ServiceException ex) {
             throw new ServiceException("Unexpected Service Error While Updating", ex);
         } catch (Exception ex) {
