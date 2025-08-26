@@ -1,5 +1,6 @@
 package com.gklyphon.AnswerQ.models;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 
 import java.util.Set;
@@ -23,6 +24,7 @@ public class Form extends Auditable {
 
     // The user owner of the form
     @ManyToOne
+    @JsonBackReference
     private User user;
 
     // List of questions in the form
