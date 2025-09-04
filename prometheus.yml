@@ -1,0 +1,11 @@
+global:
+  scrape_interval: 15s
+
+scrape_configs:
+  - job_name: 'AnswerQ'
+    metrics_path: '/actuator/prometheus'
+    basic_auth:
+      username: ${ACTUATOR_USERNAME}
+      password: ${ACTUATOR_PASSWORD}
+    static_configs:
+      - targets: ['answerq-app:8081']
