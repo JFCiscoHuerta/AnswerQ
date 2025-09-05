@@ -48,6 +48,8 @@ public class SecurityConfig {
     private final String[] AUTHENTICATED_ENDPOINTS = {"/v1/answers/**","/v1/forms/**", "/v1/question/**"
         , "/v1/user-answers/**"};
 
+    private final String[] SWAGGER_ENDPOINTS = {"/v3/api-docs/**","/swagger-ui.html","/swagger-ui/**"};
+
     @Bean
     UserDetailsService actuatorUsers(PasswordEncoder encoder, Environment environment) {
         String prometheusPwd = environment.getRequiredProperty("ACTUATOR_PASSWORD");
@@ -109,6 +111,7 @@ public class SecurityConfig {
                 (auths) -> auths
                         .requestMatchers(AUTHENTICATED_ENDPOINTS).authenticated()
                         .requestMatchers(PUBLIC_ENDPOINTS).permitAll()
+                        .requestMatchers(SWAGGER_ENDPOINTS).permitAll()
                         .anyRequest().authenticated()
         ).sessionManagement(manager -> manager.sessionCreationPolicy(
                 SessionCreationPolicy.STATELESS)
