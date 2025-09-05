@@ -1,45 +1,27 @@
-package com.gklyphon.AnswerQ.models;
+package com.gklyphon.AnswerQ.dtos;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import jakarta.persistence.*;
+import com.gklyphon.AnswerQ.models.Question;
 
 import java.util.Set;
 
-/**
- * This class represents a form created by a user.
- * Each form belongs to a specific user.
- *
- * @author JFCiscoHuerta
- * @since 2025-06-16
- */
-@Entity
-@Table
-public class Form extends Auditable {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+public class ResponseFormDto {
     private Long id;
     private String name;
     private boolean isEnabled;
     private String pin;
 
-    // The user owner of the form
-    @ManyToOne
-    @JsonBackReference
-    private User user;
-
-    // List of questions in the form
-    @OneToMany(mappedBy = "form", cascade = CascadeType.ALL, orphanRemoval = true)
+    private ResponseUserDto responseUserDto;
     private Set<Question> questions;
 
-    public Form() {
+    public ResponseFormDto() {
     }
 
-    public Form(Long id, String name, boolean isEnabled, String pin, User user, Set<Question> questions) {
+    public ResponseFormDto(Long id, String name, boolean isEnabled, String pin, ResponseUserDto responseUserDto, Set<Question> questions) {
         this.id = id;
         this.name = name;
         this.isEnabled = isEnabled;
         this.pin = pin;
-        this.user = user;
+        this.responseUserDto = responseUserDto;
         this.questions = questions;
     }
 
@@ -75,12 +57,12 @@ public class Form extends Auditable {
         this.pin = pin;
     }
 
-    public User getUser() {
-        return user;
+    public ResponseUserDto getResponseUserDto() {
+        return responseUserDto;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setResponseUserDto(ResponseUserDto responseUserDto) {
+        this.responseUserDto = responseUserDto;
     }
 
     public Set<Question> getQuestions() {

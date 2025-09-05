@@ -2,6 +2,7 @@ package com.gklyphon.AnswerQ.controllers;
 
 import com.gklyphon.AnswerQ.dtos.LoginUserDto;
 import com.gklyphon.AnswerQ.dtos.RegisterUserDto;
+import com.gklyphon.AnswerQ.dtos.ResponseUserDto;
 import com.gklyphon.AnswerQ.dtos.VerifyUserDto;
 import com.gklyphon.AnswerQ.models.User;
 import com.gklyphon.AnswerQ.responses.LoginResponse;
@@ -36,8 +37,8 @@ public class AuthRestController {
      * @return ResponseEntity containing the registered user and HTTP status
      */
     @PostMapping("/signup")
-    public ResponseEntity<User> register(@RequestBody RegisterUserDto registerUserDto) {
-        User registeredUser = authenticationService.signup(registerUserDto);
+    public ResponseEntity<?> register(@RequestBody RegisterUserDto registerUserDto) {
+        ResponseUserDto registeredUser = authenticationService.signup(registerUserDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(registeredUser);
     }
 

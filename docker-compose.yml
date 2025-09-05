@@ -6,7 +6,7 @@ services:
     ports:
       - "5432:5432"
     healthcheck:
-      test: ["CMD", "pg_isready", "-U", "${ANSWERQ_DB_USERNAME}"]
+      test: ["CMD", "pg_isready", "-U", "${ANSWERQ_DB_USERNAME}", "-d", "${ANSWERQ_DB}"]
       interval: 10s
       retries: 5
     environment:
@@ -26,10 +26,40 @@ services:
       dockerfile: Dockerfile
     ports:
       - "8081:8081"
+    expose:
+      - "8082"
     env_file: .env
+    environment:
+      - SPRING_PROFILES_ACTIVE=${SPRING_PROFILES_ACTIVE}
     depends_on:
       - answerq-db
     restart: always
+    networks:
+      - answerq
+
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: prometheus
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+    ports:
+      - "9090:9090"
+    networks:
+      - answerq
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: grafana
+    ports:
+      - "3000:3000"
+    environment:
+      - GF_SECURITY_ADMIN_USER=
+      - GF_SECURITY_ADMIN_PASSWORD=
+    depends_on:
+      - prometheus
+    restart: unless-stopped
+    volumes:
+      - ./grafana/provisioning/datasources:/etc/grafana/provisioning/datasources
     networks:
       - answerq
 

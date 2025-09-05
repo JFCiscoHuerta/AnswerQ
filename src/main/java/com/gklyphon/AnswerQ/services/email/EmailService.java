@@ -23,7 +23,7 @@ public class EmailService {
     }
 
     /**
-     * Sends a verification email.
+     * Sends an email.
      *
      * @param to The recipient email address
      * @param subject The subject of the email
@@ -31,14 +31,14 @@ public class EmailService {
      * @throws MessagingException If an error occurs while creating or sending the email
      * @throws IllegalArgumentException If any of the parameters are null or empty
      */
-    public void sendVerificationEmail(String to, String subject, String text) throws MessagingException {
+    public void sendEmail(String to, String subject, String text) throws MessagingException {
         validateEmailParameters(to, subject, text);
         try {
             MimeMessage message = emailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(message, true);
             helper.setTo(to);
             helper.setSubject(subject);
-            helper.setText(text);
+            helper.setText(text, true);
             emailSender.send(message);
         } catch (MessagingException ex) {
             throw ex;

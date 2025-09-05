@@ -1,5 +1,7 @@
 package com.gklyphon.AnswerQ.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -18,14 +20,15 @@ import java.util.Set;
  * @since 2025-06-16
  */
 @Entity
-@Table(name = "users")
+@Table(name = "users", uniqueConstraints = {
+        @UniqueConstraint(columnNames = "email")
+})
 public class User extends Auditable implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String username;
     private String firstname;
     private String lastname;
     private LocalDate birthdate;
@@ -35,9 +38,9 @@ public class User extends Auditable implements UserDetails {
     private String password;
     private Boolean enabled;
 
-
     // Forms created by the user
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
     private Set<Form> forms;
 
     // Answers submitted by the user
@@ -53,9 +56,8 @@ public class User extends Auditable implements UserDetails {
     public User() {
     }
 
-    public User(Long id, String username, String firstname, String lastname, LocalDate birthdate, String email, String gender, String phoneNumber, String password, Boolean enabled, Set<Form> forms, Set<UserAnswer> userAnswers, String verificationCode, LocalDateTime verificationCodeExpiresAt) {
+    public User(Long id, String firstname, String lastname, LocalDate birthdate, String email, String gender, String phoneNumber, String password, Boolean enabled, Set<Form> forms, Set<UserAnswer> userAnswers, String verificationCode, LocalDateTime verificationCodeExpiresAt) {
         this.id = id;
-        this.username = username;
         this.firstname = firstname;
         this.lastname = lastname;
         this.birthdate = birthdate;
@@ -104,11 +106,11 @@ public class User extends Auditable implements UserDetails {
     }
 
     public String getUsername() {
-        return username;
+        return email;
     }
 
     public void setUsername(String username) {
-        this.username = username;
+        this.email = username;
     }
 
     public String getFirstname() {

@@ -1,5 +1,6 @@
 package com.gklyphon.AnswerQ.services;
 
+import com.gklyphon.AnswerQ.dtos.ResponseUserDto;
 import com.gklyphon.AnswerQ.exceptions.exception.ElementNotFoundException;
 import com.gklyphon.AnswerQ.models.User;
 
@@ -10,6 +11,6 @@ import com.gklyphon.AnswerQ.models.User;
  * @author JFCiscoHuerta
  * @since 2025-06-21
  */
-public interface IUserService extends IService<User, User> {
+public interface IUserService extends IService<ResponseUserDto, User> {
 
 }
