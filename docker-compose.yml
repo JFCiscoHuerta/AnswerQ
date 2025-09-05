@@ -29,6 +29,8 @@ services:
     expose:
       - "8082"
     env_file: .env
+    environment:
+      - SPRING_PROFILES_ACTIVE=${SPRING_PROFILES_ACTIVE}
     depends_on:
       - answerq-db
     restart: always
