@@ -131,7 +131,7 @@ public class SecurityConfig {
     @Bean
     CorsConfigurationSource corsConfiguration() {
 
-        final List<String> ALLOWED_ORIGINS = List.of("http://localhost:8081");
+        final List<String> ALLOWED_ORIGINS = List.of("http://localhost:4200");
         final List<String> ALLOWED_METHODS = List.of("GET","POST","PUT","DELETE");
         final List<String> ALLOWED_HEADERS = List.of("Authorization, Content-Type");
 
@@ -140,7 +140,7 @@ public class SecurityConfig {
         configuration.setAllowedMethods(ALLOWED_METHODS);
         configuration.setAllowedHeaders(ALLOWED_HEADERS);
         configuration.setMaxAge(3600L);
-        configuration.setAllowCredentials(false);
+        configuration.setAllowCredentials(true);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
