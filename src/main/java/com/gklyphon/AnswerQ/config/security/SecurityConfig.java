@@ -132,8 +132,8 @@ public class SecurityConfig {
     CorsConfigurationSource corsConfiguration() {
 
         final List<String> ALLOWED_ORIGINS = List.of("http://localhost:4200");
-        final List<String> ALLOWED_METHODS = List.of("GET","POST","PUT","DELETE");
-        final List<String> ALLOWED_HEADERS = List.of("Authorization, Content-Type");
+        final List<String> ALLOWED_METHODS = List.of("GET","POST","PUT","DELETE","OPTIONS");
+        final List<String> ALLOWED_HEADERS = List.of("Authorization","Content-Type");
 
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowedOrigins(ALLOWED_ORIGINS);
