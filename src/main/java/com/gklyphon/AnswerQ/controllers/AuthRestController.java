@@ -66,7 +66,7 @@ public class AuthRestController {
     public ResponseEntity<?> verifyUser(@RequestBody VerifyUserDto verifyUserDto) {
         try {
             authenticationService.verifyUser(verifyUserDto);
-            return ResponseEntity.ok("Account verified successfully");
+            return ResponseEntity.ok().build();
         } catch (RuntimeException ex) {
             return ResponseEntity.badRequest().body(ex.getMessage());
         }
