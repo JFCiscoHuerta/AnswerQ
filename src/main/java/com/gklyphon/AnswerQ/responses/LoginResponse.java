@@ -16,9 +16,13 @@ public class LoginResponse {
     @JsonProperty("expiresIn")
     public long expiresIn;
 
-    public LoginResponse(String token, long expiresIn) {
+    @JsonProperty("verified")
+    public boolean verified;
+
+    public LoginResponse(String token, long expiresIn, boolean verified) {
         this.token = token;
         this.expiresIn = expiresIn;
+        this.verified = verified;
     }
 
     public String getToken() {
@@ -35,5 +39,13 @@ public class LoginResponse {
 
     public void setExpiresIn(long expiresIn) {
         this.expiresIn = expiresIn;
+    }
+
+    public boolean isVerified() {
+        return verified;
+    }
+
+    public void setVerified(boolean verified) {
+        this.verified = verified;
     }
 }

@@ -52,7 +52,7 @@ public class AuthRestController {
     public ResponseEntity<LoginResponse> login(@RequestBody LoginUserDto loginUserDto) {
         User authenticatedUser = authenticationService.authenticate(loginUserDto);
         String jwtToken = jwtService.generateToken(authenticatedUser);
-        LoginResponse loginResponse = new LoginResponse(jwtToken, jwtService.getJwtExpiration());
+        LoginResponse loginResponse = new LoginResponse(jwtToken, jwtService.getJwtExpiration(), authenticatedUser.isEnabled());
         return ResponseEntity.ok(loginResponse);
     }
 
