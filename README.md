@@ -6,7 +6,7 @@ AnswerQ is a **forms and surveys** management API, designed with a focus on scal
 
 ## 🛠️ Tech
 
-- **Java 17+**
+- **Java 21+**
 - **Spring Boot**
 - **Spring Security**
 - **Spring Data JPA**
