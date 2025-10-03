@@ -52,7 +52,7 @@ public class AuthRestController {
     public ResponseEntity<LoginResponse> login(@RequestBody LoginUserDto loginUserDto) {
         User authenticatedUser = authenticationService.authenticate(loginUserDto);
         String jwtToken = jwtService.generateToken(authenticatedUser);
-        LoginResponse loginResponse = new LoginResponse(jwtToken, jwtService.getJwtExpiration());
+        LoginResponse loginResponse = new LoginResponse(jwtToken, jwtService.getJwtExpiration(), authenticatedUser.isEnabled());
         return ResponseEntity.ok(loginResponse);
     }
 
@@ -66,7 +66,7 @@ public class AuthRestController {
     public ResponseEntity<?> verifyUser(@RequestBody VerifyUserDto verifyUserDto) {
         try {
             authenticationService.verifyUser(verifyUserDto);
-            return ResponseEntity.ok("Account verified successfully");
+            return ResponseEntity.ok().build();
         } catch (RuntimeException ex) {
             return ResponseEntity.badRequest().body(ex.getMessage());
         }
