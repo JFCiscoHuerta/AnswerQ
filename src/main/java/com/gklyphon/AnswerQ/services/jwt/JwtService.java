@@ -1,5 +1,6 @@
 package com.gklyphon.AnswerQ.services.jwt;
 
+import com.gklyphon.AnswerQ.models.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -56,11 +57,14 @@ public class JwtService {
     /**
      * Generates a JWT token for the given user details.
      *
-     * @param userDetails User details to include in the token
+     * @param user User to include in the token
      * @return Generated JWT token
      */
-    public String generateToken(UserDetails userDetails) {
-        return generateToken(new HashMap<>() , userDetails);
+    public String generateToken(User user) {
+        Map<String, Object> claims = new HashMap<>();
+        claims.put("id", user.getId());
+        claims.put("enabled", user.getEnabled());
+        return generateToken(claims, user);
     }
 
     /**
