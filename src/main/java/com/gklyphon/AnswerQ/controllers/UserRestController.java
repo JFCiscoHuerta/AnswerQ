@@ -17,6 +17,11 @@ public class UserRestController {
         this.profileService = profileService;
     }
 
+    @GetMapping("/user-details/{id}")
+    public ResponseEntity<?> userDetails(@PathVariable Long id) throws ElementNotFoundException {
+        return ResponseEntity.ok(profileService.userDetails(id));
+    }
+
     @PutMapping("/change-email/{id}")
     public ResponseEntity<?> changeEmail(@PathVariable Long id, @RequestBody EmailUpdateDto emailUpdateDto) throws ElementNotFoundException {
         profileService.updateEmail(id, emailUpdateDto);

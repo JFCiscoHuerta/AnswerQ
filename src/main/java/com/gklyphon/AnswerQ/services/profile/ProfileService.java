@@ -1,7 +1,9 @@
 package com.gklyphon.AnswerQ.services.profile;
 
 import com.gklyphon.AnswerQ.dtos.EmailUpdateDto;
+import com.gklyphon.AnswerQ.dtos.LoginUserDto;
 import com.gklyphon.AnswerQ.dtos.PasswordUpdateDto;
+import com.gklyphon.AnswerQ.dtos.ResponseUserDto;
 import com.gklyphon.AnswerQ.exceptions.exception.ElementNotFoundException;
 import com.gklyphon.AnswerQ.mapper.IMapper;
 import com.gklyphon.AnswerQ.models.User;
@@ -33,6 +35,12 @@ public class ProfileService {
         this.mapper = mapper;
         this.emailService = emailService;
         this.passwordEncoder = passwordEncoder;
+    }
+
+    @Transactional
+    public ResponseUserDto userDetails(Long id) throws ElementNotFoundException {
+        User user = userRepository.findById(id).orElseThrow(() -> new ElementNotFoundException("User not found"));
+        return mapper.fromUserToUserDto(user);
     }
 
     @Transactional
