@@ -1,7 +1,6 @@
 # AnswerQ
 
 AnswerQ is a scalable and secure platform for **form and survey management**, built with modern Java technologies and production-ready observability tools.  
-It provides user management, authentication, roles, survey creation, responses handling, auditing, and system monitoring — ready to run on Docker, orchestrate with Prometheus, and visualize with Grafana.
 
 ---
 
@@ -16,7 +15,6 @@ It provides user management, authentication, roles, survey creation, responses h
 ![SpringDoc OpenAPI](https://img.shields.io/badge/OpenAPI-2.8.12-orange)
 ![JJWT](https://img.shields.io/badge/JJWT-0.12.6-red)
 ![Maven](https://img.shields.io/badge/Maven-Build-red)
-
 ![Micrometer Prometheus](https://img.shields.io/badge/Micrometer_Prometheus-latest-orange)
 ![Docker](https://img.shields.io/badge/Docker-Container-blue)
 
