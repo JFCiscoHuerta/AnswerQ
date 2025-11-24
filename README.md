@@ -7,18 +7,18 @@ It provides user management, authentication, roles, survey creation, responses h
 
 ## 🛠️ Tech
 
-![Java](https://img.shields.io/badge/Java-21%2B-blue)
-![Spring Boot](https://img.shields.io/badge/Spring_Boot-3.x-brightgreen)
-![Spring Security](https://img.shields.io/badge/Spring_Security-enabled-darkgreen)
-![Spring Data JPA](https://img.shields.io/badge/Spring_Data_JPA-active-green)
-![Spring Actuator](https://img.shields.io/badge/Spring_Actuator-monitoring-lightgrey)
+![Java](https://img.shields.io/badge/Java-21-blue)
+![Spring Boot](https://img.shields.io/badge/Spring_Boot-3.5.0-brightgreen)
+![Spring Security](https://img.shields.io/badge/Spring_Security-3.5.0-darkgreen)
+![Spring Data JPA](https://img.shields.io/badge/Spring_Data_JPA-3.5.0-green)
+![Spring Actuator](https://img.shields.io/badge/Spring_Actuator-3.5.0-lightgrey)
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-driver-blue)
+![SpringDoc OpenAPI](https://img.shields.io/badge/OpenAPI-2.8.12-orange)
+![JJWT](https://img.shields.io/badge/JJWT-0.12.6-red)
+![Maven](https://img.shields.io/badge/Maven-Build-red)
 
-![PostgreSQL](https://img.shields.io/badge/PostgreSQL-16-blue)
-![Swagger](https://img.shields.io/badge/Swagger-OpenAPI_3-orange)
-![Prometheus](https://img.shields.io/badge/Prometheus-metrics-orange)
-![Grafana](https://img.shields.io/badge/Grafana-dashboards-yellow)
-![Maven](https://img.shields.io/badge/Build-Maven-red)
-![Docker](https://img.shields.io/badge/Docker-containers-blue)
+![Micrometer Prometheus](https://img.shields.io/badge/Micrometer_Prometheus-latest-orange)
+![Docker](https://img.shields.io/badge/Docker-Container-blue)
 
 ---
 
