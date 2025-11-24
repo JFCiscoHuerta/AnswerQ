@@ -4,6 +4,12 @@ import com.gklyphon.AnswerQ.models.Question;
 
 import java.util.Set;
 
+/**
+ * DTO representing a form response.
+ *
+ * @author JFCiscoHuerta
+ * @since 2025-11-23
+ */
 public class ResponseFormDto {
     private Long id;
     private String name;

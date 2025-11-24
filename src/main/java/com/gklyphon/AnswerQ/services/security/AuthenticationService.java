@@ -1,8 +1,6 @@
 package com.gklyphon.AnswerQ.services.security;
 
 import com.gklyphon.AnswerQ.dtos.*;
-import com.gklyphon.AnswerQ.exceptions.exception.AccountNotVerifiedException;
-import com.gklyphon.AnswerQ.exceptions.exception.ElementNotFoundException;
 import com.gklyphon.AnswerQ.exceptions.exception.InvalidCredentialsException;
 import com.gklyphon.AnswerQ.exceptions.exception.UserAlreadyExistsException;
 import com.gklyphon.AnswerQ.mapper.IMapper;
@@ -159,6 +157,11 @@ public class AuthenticationService {
         }
     }
 
+    /**
+     * Sends a verification email containing a 6-digit code.
+     *
+     * @param user User to send the email to.
+     */
     public void sendVerificationEmail(User user) {
         String subject = "Account Verification";
         String verificationCode = user.getVerificationCode();
@@ -204,6 +207,11 @@ public class AuthenticationService {
         return String.valueOf(code);
     }
 
+    /**
+     * Sends a security alert email notifying the user of a new login.
+     *
+     * @param user The user who logged in.
+     */
     private void sendSignInAlertEmail(User user) {
         String subject = "New Login Detected on Your Account";
         String htmlMessage = "<html>" +
