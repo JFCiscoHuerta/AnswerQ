@@ -1,7 +1,6 @@
 package com.gklyphon.AnswerQ.services.profile;
 
 import com.gklyphon.AnswerQ.dtos.EmailUpdateDto;
-import com.gklyphon.AnswerQ.dtos.LoginUserDto;
 import com.gklyphon.AnswerQ.dtos.PasswordUpdateDto;
 import com.gklyphon.AnswerQ.dtos.ResponseUserDto;
 import com.gklyphon.AnswerQ.exceptions.exception.ElementNotFoundException;
@@ -20,6 +19,12 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
+/**
+ * Service responsible for handling profile-related operations for {@link User} accounts.
+ *
+ * @author JFCiscoHuerta
+ * @since 2025-11-23
+ */
 @Service
 public class ProfileService {
 
@@ -37,12 +42,27 @@ public class ProfileService {
         this.passwordEncoder = passwordEncoder;
     }
 
+    /**
+     * Retrieves user profile details by ID.
+     *
+     * @param id the ID of the user to retrieve
+     * @return the mapped {@link ResponseUserDto} containing profile information
+     * @throws ElementNotFoundException if the user does not exist
+     */
     @Transactional
     public ResponseUserDto userDetails(Long id) throws ElementNotFoundException {
         User user = userRepository.findById(id).orElseThrow(() -> new ElementNotFoundException("User not found"));
         return mapper.fromUserToUserDto(user);
     }
 
+    /**
+     * Updates a user's password after validating:
+     *
+     * @param id the ID of the user
+     * @param passwordUpdateDto DTO containing old, new, and confirmation passwords
+     * @throws ElementNotFoundException if the user does not exist
+     * @throws IllegalArgumentException if validation constraints fail
+     */
     @Transactional
     public void updatePassword(Long id, PasswordUpdateDto passwordUpdateDto) throws ElementNotFoundException {
         User user = userRepository.findById(id)
@@ -58,6 +78,15 @@ public class ProfileService {
         sendUpdatePasswordNotification(user);
     }
 
+
+    /**
+     * Updates a user's email address after validating:
+     *
+     * @param id the ID of the user
+     * @param emailUpdateDto DTO containing the new email and password validation
+     * @throws ElementNotFoundException if the user does not exist
+     * @throws IllegalArgumentException if password is invalid or email is already used
+     */
     @Transactional
     public void updateEmail(Long id, EmailUpdateDto emailUpdateDto) throws ElementNotFoundException {
 
@@ -78,6 +107,12 @@ public class ProfileService {
         sendUpdateEmailNotification(user);
     }
 
+
+    /**
+     * Sends a notification email confirming an email update.
+     *
+     * @param user the user who updated their email
+     */
     private void sendUpdateEmailNotification(User user) {
         String subject = "Email Update";
         String htmlMessage = "<html>" +
@@ -117,6 +152,12 @@ public class ProfileService {
             log.error(ex.getMessage());
         }
     }
+
+    /**
+     * Sends a notification email confirming a password update.
+     *
+     * @param user the user who updated their password
+     */
 
     private void sendUpdatePasswordNotification(User user) {
         String subject = "Email Update";
