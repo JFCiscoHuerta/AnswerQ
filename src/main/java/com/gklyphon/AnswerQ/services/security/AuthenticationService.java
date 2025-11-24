@@ -1,7 +1,8 @@
 package com.gklyphon.AnswerQ.services.security;
 
 import com.gklyphon.AnswerQ.dtos.*;
-import com.gklyphon.AnswerQ.exceptions.exception.ElementNotFoundException;
+import com.gklyphon.AnswerQ.exceptions.exception.InvalidCredentialsException;
+import com.gklyphon.AnswerQ.exceptions.exception.UserAlreadyExistsException;
 import com.gklyphon.AnswerQ.mapper.IMapper;
 import com.gklyphon.AnswerQ.models.User;
 import com.gklyphon.AnswerQ.repositories.IUserRepository;
@@ -10,6 +11,7 @@ import jakarta.mail.MessagingException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -57,8 +59,13 @@ public class AuthenticationService {
     @Transactional
     public ResponseUserDto signup(RegisterUserDto registerUserDto) {
         User user = mapper.fromUserRegisterUserDtoToUser(registerUserDto);
+
+        if (userRepository.findByEmail(registerUserDto.getEmail()).isPresent()) {
+            throw new UserAlreadyExistsException("Email already registered");
+        }
+
         user.setPassword(passwordEncoder.encode(registerUserDto.getPassword()));
-        user.setEnabled(false);
+        user.setEnabled(true);
         user.setVerificationCode(generateVerificationCode());
         user.setVerificationCodeExpiresAt(LocalDateTime.now().plusMinutes(VERIFICATION_CODE_EXPIRATION_MINUTES));
 
@@ -81,14 +88,15 @@ public class AuthenticationService {
     @Transactional
     public User authenticate(LoginUserDto loginUserDto) {
         User user = userRepository.findByEmail(loginUserDto.getEmail())
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new InvalidCredentialsException("Invalid credentials"));
 
-        if (!user.isEnabled()) {
-            throw new RuntimeException("Account not verified. Please verify your account");
+        try {
+            authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(loginUserDto.getEmail(), loginUserDto.getPassword()));
+        } catch (BadCredentialsException ex) {
+            throw new InvalidCredentialsException("Invalid credentials");
         }
 
-        authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(loginUserDto.getEmail(), loginUserDto.getPassword()));
         sendSignInAlertEmail(user);
         return user;
     }
@@ -149,6 +157,11 @@ public class AuthenticationService {
         }
     }
 
+    /**
+     * Sends a verification email containing a 6-digit code.
+     *
+     * @param user User to send the email to.
+     */
     public void sendVerificationEmail(User user) {
         String subject = "Account Verification";
         String verificationCode = user.getVerificationCode();
@@ -194,6 +207,11 @@ public class AuthenticationService {
         return String.valueOf(code);
     }
 
+    /**
+     * Sends a security alert email notifying the user of a new login.
+     *
+     * @param user The user who logged in.
+     */
     private void sendSignInAlertEmail(User user) {
         String subject = "New Login Detected on Your Account";
         String htmlMessage = "<html>" +
